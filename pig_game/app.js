@@ -7,9 +7,11 @@ GAME RULES:
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 
+- Additional rules 
+    - if the player gets 6 on dice in a row then he loses his score
 */
 
-var scores, roundScore, activePlayer, dice, gamePlaying;
+var scores, roundScore, activePlayer, dice, gamePlaying, lastDice;
 
 // initialize game
 Init();
@@ -17,9 +19,9 @@ Init();
 // when clicked on Roll Dice
 document.querySelector('.btn-roll').addEventListener('click', function(){
     if(gamePlaying){
-   
          // 1. random number
         var dice = Math.floor(Math.random() * 6) + 1;
+
 
         // 2. Display the result
         var diceDOM = document.querySelector('.dice');
@@ -27,7 +29,13 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDOM.src = 'dice-' + dice + '.png';
 
         // 3. Update round score IF the rolled number was NOT a 1
-        if(dice !== 1){
+        if(lastDice === 6 && dice === 6){
+            // Player looses score
+            scores[activePlayer] = 0
+            document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+            NextPlayer();
+
+        }else if((dice !== 1) ){
             // add score
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
@@ -35,8 +43,9 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
             // Next Player
             NextPlayer();
         }
+        
+        lastDice = dice;
     }
-   
 });
 
 document.querySelector('.btn-hold').addEventListener('click', function(){
@@ -93,6 +102,7 @@ function Init(){
 function NextPlayer(){
     activePlayer === 0 ? activePlayer = 1: activePlayer = 0;
     roundScore = 0;
+    previousScore = 0;
 
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0';
