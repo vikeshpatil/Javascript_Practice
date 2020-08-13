@@ -36,5 +36,7 @@ mergeSort = arr => {
     return merge(left, right);
 }
 
+mergeSort([14, 23, 54, 76, 2, 32]);
+
 
 // Time Complexity - O(nlog(n))
